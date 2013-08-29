@@ -1,0 +1,14 @@
+{
+  "name": "lite-engine-examples",
+  "version": "0.0.1",
+  "description": "Lite Engine examples",
+  "author": "Luiz Bills <luizpbills@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/luizbills/lite-engine.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "lite": "*"
+  }
+}
