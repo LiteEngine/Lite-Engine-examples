@@ -9,6 +9,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "lite": "*"
+    "lite-engine": "*"
   }
 }
