@@ -1,51 +1,31 @@
 var lite = require('lite-engine'),
 
-	Position = require('./components/position'),
-	Velocity = require('./components/velocity'),
+	Position = lite.component('position'),
+	Velocity = lite.component('velocity'),
 	Moviment = require('./systems/moviment'),
 
-	Collision = require('./components/collision'),
+	Collision = lite.component('collision'),
 	CollisionManager = require('./systems/collision-manager'),
 
-	Render = require('./components/render'),
-	Renderer = require('./systems/renderer'),
+	Render = lite.component('render'),
+	Renderer = require('./systems/renderer');
 
-	stats = require('./stats');
 
-function loop() {
-	game.stats.begin();
+lite.onstart(function() {
+	var canvas = document.getElementById('canvas');
 
-	Moviment._processAll();
-	CollisionManager._processAll();
-	// clear game screen
-	lite.ctx.clearRect(0, 0, lite.viewport.width, lite.viewport.height);
-	Renderer._processAll();
+	lite.viewport.init('game', 200, 200);
 
-	game.stats.end();
-	window.requestAnimationFrame(loop);
-}
+	lite.ctx = canvas.getContext('2d');
+	canvas.width = lite.viewport.width;
+	canvas.height = lite.viewport.height;
 
-game = {
-	start: function(canvas, width, height) {
-		if (!this.initialized) {
-			this.initialized = true;
-			
-			lite.ctx = canvas.getContext('2d');
-			lite.viewport.width = canvas.width = width;
-			lite.viewport.height = canvas.height = height;
+	addEntity(32);
 
-			addEntity(32);
-
-			game.stats = new stats();
-			document.body.appendChild( game.stats.domElement );
-			loop();
-
-			document.addEventListener('keydown', function(e) {
-				if (e.keyCode === 32) addEntity(random(1,32));
-			});
-		}
-	}
-};
+	document.addEventListener('keydown', function(e) {
+		if (e.keyCode === 32) addEntity(random(1,32));
+	});
+});
 
 function random(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -53,7 +33,7 @@ function random(min, max) {
 
 var total = 0;
 function addEntity(diameter) {
-	var newEntityID = lite.newEntityID(),
+	var newEntityID = lite.entity.create(),
 		px = random(diameter, lite.viewport.width - diameter),
 		py = random(diameter, lite.viewport.height - diameter),
 		vx = random(1,3),
@@ -70,8 +50,13 @@ function addEntity(diameter) {
 	
 	Render.set(newEntityID, 'visible', true);
 
+	Moviment.add(newEntityID);
+	Renderer.add(newEntityID);
+	CollisionManager.add(newEntityID);
+
 	console.log(++total);
 	return newEntityID;
 }
 
-module.exports = game;
+lite.start({ fps: 60 });
+window.lite = lite;

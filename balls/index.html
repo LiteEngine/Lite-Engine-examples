@@ -10,12 +10,14 @@
   </style>
 </head>
 <body>
-  <canvas id='canvas'></canvas>
+  <div id='game'>
+    <canvas id='canvas'></canvas>
+  </div>
   <p>Hit SPACEBAR to add an entity</p>
+
   <script src="bundle.js"></script>
   <script>
-    var game = require('./game');
-    game.start(document.getElementById('canvas'), 200, 200);
+    require('./game');
   </script>
 </body>
 </html>
